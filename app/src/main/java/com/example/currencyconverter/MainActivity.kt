@@ -10,10 +10,14 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.currencyconverter.databinding.ActivityMainBinding
 import java.util.Locale
+import android.view.View
+import android.widget.AdapterView
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: CurrencyViewModel
 
     private val taux = mapOf(
         "EUR" to 1.0,
@@ -33,10 +37,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = ViewModelProvider(this)[CurrencyViewModel::class.java]
+
         remplirDevises()
         configurerClavier()
         configurerConversion()
         configurerInversion()
+        configurerChangementDevises()
+    }
+
+    private fun restaurerValeurs() {
+        binding.tvMontant.text = viewModel.montant
+
+        binding.spDeviseSource.setSelection(viewModel.deviseSource)
+        binding.spDeviseCible.setSelection(viewModel.deviseCible)
+
+        premierChiffre = viewModel.montant == "0"
+        resultatAffiche = viewModel.resultatAffiche
+
+        if (resultatAffiche) {
+            effectuerConversion()
+        }
     }
 
     private fun remplirDevises() {
@@ -53,7 +74,6 @@ class MainActivity : AppCompatActivity() {
         binding.spDeviseSource.adapter = adapter
         binding.spDeviseCible.adapter = adapter
 
-        // USD comme source et EUR comme cible
         binding.spDeviseSource.setSelection(0)
         binding.spDeviseCible.setSelection(1)
     }
@@ -77,6 +97,8 @@ class MainActivity : AppCompatActivity() {
             binding.tvResultat.text = ""
             premierChiffre = true
             resultatAffiche = false
+            viewModel.montant = "0"
+            viewModel.resultatAffiche = false
         }
     }
 
@@ -98,7 +120,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.tvMontant.text = montant
-        resultatAffiche = false
+
+        viewModel.montant = montant
+        resultatAffiche = true
+        viewModel.resultatAffiche = true
+
+        effectuerConversion()
     }
 
     private fun configurerConversion() {
@@ -117,6 +144,38 @@ class MainActivity : AppCompatActivity() {
             effectuerConversion()
         }
     }
+
+
+    private fun configurerChangementDevises() {
+
+        val listener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.deviseSource =
+                    binding.spDeviseSource.selectedItemPosition
+
+                viewModel.deviseCible =
+                    binding.spDeviseCible.selectedItemPosition
+
+                if (resultatAffiche) {
+                    effectuerConversion()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Aucune devise sélectionnée
+            }
+        }
+
+        binding.spDeviseSource.onItemSelectedListener = listener
+        binding.spDeviseCible.onItemSelectedListener = listener
+    }
+
 
     private fun convertir(
         montant: Double,
@@ -141,6 +200,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         resultatAffiche = true
+        viewModel.resultatAffiche = true
+        viewModel.montant = binding.tvMontant.text.toString()
     }
 
     private fun configurerInversion() {
