@@ -1,8 +1,8 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CurrencyConverter</string>
     <string name="titre">Currency Converter</string>
-    <string name="convertir">Convertir</string>
+    <string name="convertir">CONVERTIR</string>
     <string name="montant_initial">0</string>
     <string name="resultat_initial">0.00</string>
     <string name="devise_source_description">Devise source</string>
@@ -25,7 +25,6 @@
         <item>CAD</item>
     </string-array>
 
-
     <string name="chiffre_1">1</string>
     <string name="chiffre_2">2</string>
     <string name="chiffre_3">3</string>
@@ -35,5 +34,4 @@
     <string name="chiffre_7">7</string>
     <string name="chiffre_8">8</string>
     <string name="chiffre_9">9</string>
-
 </resources>
