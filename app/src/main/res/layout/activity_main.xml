@@ -50,6 +50,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/devise_source_description"
             app:layout_constraintBottom_toTopOf="@id/btnInverser"
+            android:textColor="@color/texte_principal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitre" />
 
@@ -148,7 +149,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Clavier numérique -->
+
     <TableLayout
         android:id="@+id/tableClavier"
         android:layout_width="0dp"
